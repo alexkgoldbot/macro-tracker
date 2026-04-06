@@ -1,35 +1,45 @@
-# KiloClaw examples
+# macro-tracker
 
-A collection of example projects built with [KiloClaw](https://kilo.ai) — an agentic chat interface powered by OpenClaw skills.
+A personal macro tracking assistant built on KiloClaw. The agent converses naturally, logs food, manages recipes, and suggests meals based on your remaining daily macro budget.
 
-Each example is a self-contained project demonstrating how to structure an OpenClaw agent, its skills, and any supporting backend or scripts.
+## What it tracks
 
-## Examples
+Protein, carbs, fat, and fiber — all in grams. Fiber is treated as a first-class macro alongside the traditional three.
 
-| Project | Description |
-|---|---|
-| [`macro-tracker`](./macro-tracker) | A personal macro tracking assistant. Logs food, manages recipes, and suggests meals based on remaining daily macro budget. |
-
-## Structure
-
-Each example follows the same layout:
+## Architecture
 
 ```
-example-name/
-├── AGENTS.md              # Agent role, behavioral rules, and dietary/user preferences
-├── USER.md                # User-specific preferences (gitignored — copy from USER.md.example)
-├── .env                   # API keys (gitignored — copy from .env.example)
-├── .env.example           # Template for required environment variables
-├── .kilo/
-│   ├── plans/             # Design docs and specs
-│   └── command/           # Skill definitions (one .md per skill)
-└── ...                    # Backend code, Python modules, etc.
+User chat
+    │
+    ▼
+OpenClaw agent  (AGENTS.md)
+    │
+    ▼
+Skills          (add-ingredient, add-recipe, log-food, suggest-meal)
+    │
+    ▼
+Python modules  (models.py, client.py, usda.py, suggest.py)
+    │
+    ▼
+SQLite database (local file)
 ```
 
-## Getting started
+See [`.kilo/plans/macro-tracker.md`](.kilo/plans/macro-tracker.md) for the full system spec.
 
-1. Clone this repo
-2. Navigate into an example directory
-3. Copy `.env.example` to `.env` and fill in any required API keys
-4. Copy `USER.md.example` to `USER.md` (if present) and set your personal preferences
-5. Open the project in KiloClaw
+## Setup
+
+1. **API key** — get a free USDA FoodData Central API key at [https://fdc.nal.usda.gov/api-key-signup](https://fdc.nal.usda.gov/api-key-signup)
+2. **Environment** — copy `.env.example` to `.env` and add your key:
+   ```
+   USDA_API_KEY=your_key_here
+   ```
+3. **User preferences** — copy `USER.md.example` to `USER.md` and set your dietary restrictions
+
+## Skills
+
+| Skill            | Trigger examples                                       |
+|------------------|--------------------------------------------------------|
+| `add-ingredient` | "Add chicken breast", "scan this label"                |
+| `add-recipe`     | "Save this as a recipe called chicken soup"            |
+| `log-food`       | "I just had 200g of oatmeal for breakfast"             |
+| `suggest-meal`   | "What should I eat?", "what fits my remaining macros?" |
